@@ -167,11 +167,15 @@ def test_github_client_reads_files_issue_and_checks():
     assert snapshot.issue_state == "open"
     assert snapshot.issue_url.endswith("/issues/14")
     assert snapshot.checks[0].name == "unit-tests"
-    assert "secret diff" not in repr(snapshot)
+    assert snapshot.head_sha == "abc"
+    assert snapshot.patches[0].filename == "src/XmlEncoder.java"
+    assert snapshot.patches[0].patch == "secret diff"
+    assert snapshot.files_skipped == ()
 
 
 def test_review_endpoint_requires_the_shared_bearer_token(monkeypatch):
     monkeypatch.setenv("ANALYSIS_TOKEN", "shared-secret")
+    monkeypatch.setenv("ANALYSIS_MODE", "rubric")
     monkeypatch.setenv("FIRESTORE_ENABLED", "false")
 
     class StubGitHub(GitHubClient):

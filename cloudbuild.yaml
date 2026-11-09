@@ -9,6 +9,7 @@ substitutions:
   _RUN_SERVICE_ACCOUNT: pr-analyzer-run
   _ANALYSIS_TOKEN_SECRET: pr-analyzer-token
   _GITHUB_TOKEN_SECRET: pr-analyzer-github-token
+  _GITHUB_WEBHOOK_SECRET: pr-analyzer-webhook-secret
   _MIN_INSTANCES: "0"
   _MAX_INSTANCES: "3"
   _MEMORY: 512Mi
@@ -58,11 +59,11 @@ steps:
       - --max-instances
       - ${_MAX_INSTANCES}
       - --timeout
-      - "60s"
+      - "180s"
       - --set-env-vars
-      - FIRESTORE_ENABLED=true,FIRESTORE_COLLECTION=prAnalyses
+      - FIRESTORE_ENABLED=true,FIRESTORE_COLLECTION=prAnalyses,ANALYSIS_MODE=gemini,VERTEX_LOCATION=us-central1,GEMINI_MODEL=gemini-2.5-flash,GEMINI_JUDGE_MODEL=gemini-2.5-pro,GOOGLE_CLOUD_PROJECT=$PROJECT_ID
       - --set-secrets
-      - ANALYSIS_TOKEN=${_ANALYSIS_TOKEN_SECRET}:latest,GITHUB_TOKEN=${_GITHUB_TOKEN_SECRET}:latest
+      - ANALYSIS_TOKEN=${_ANALYSIS_TOKEN_SECRET}:latest,GITHUB_TOKEN=${_GITHUB_TOKEN_SECRET}:latest,GITHUB_WEBHOOK_SECRET=${_GITHUB_WEBHOOK_SECRET}:latest
       - --allow-unauthenticated
       - --quiet
 
